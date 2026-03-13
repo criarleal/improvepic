@@ -1,68 +1,179 @@
-import React, { useState } from 'react';
-import { Sparkles } from 'lucide-react';
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparador de Qualidade - Cia da Pizza</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: black;
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: system-ui, -apple-system, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-const App = () => {
-  // CONFIGURAÇÃO FÁCIL: Caminhos das imagens
-  const images = {
-    before: "https://iili.io/qcE69XR.png",
-    after: "https://iili.io/qcE2d3g.png"
-  };
+        .container-img {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            aspect-ratio: 1 / 1;
+            border-radius: 2rem;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: #111;
+        }
 
-  const [showAfter, setShowAfter] = useState(false);
+        img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: opacity 0.25s ease-in-out;
+        }
 
-  return (
-    <div className="min-h-screen bg-black flex flex-col items-center justify-center p-4 touch-none select-none">
-      
-      {/* Container Principal do Antes e Depois */}
-      <div 
-        className="relative w-full max-w-md aspect-square rounded-3xl overflow-hidden shadow-2xl border border-white/10"
-        onTouchStart={() => setShowAfter(true)}
-        onTouchEnd={() => setShowAfter(false)}
-        onMouseDown={() => setShowAfter(true)}
-        onMouseUp={() => setShowAfter(false)}
-        onMouseLeave={() => setShowAfter(false)}
-      >
-        {/* Imagem de Fundo (Sempre a 'Depois' para evitar flash branco) */}
-        <img 
-          src={images.after} 
-          alt="Depois" 
-          className="absolute inset-0 w-full h-full object-contain"
-        />
+        #img-before {
+            z-index: 10;
+        }
 
-        {/* Imagem 'Antes' que desaparece ao tocar */}
-        <img 
-          src={images.before} 
-          alt="Antes" 
-          className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-200 ${showAfter ? 'opacity-0' : 'opacity-100'}`}
-        />
+        .status-badge {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            z-index: 30;
+            padding: 0.4rem 1rem;
+            border-radius: 9999px;
+            font-size: 10px;
+            font-weight: 900;
+            letter-spacing: 0.1em;
+            border-width: 1px;
+            transition: all 0.3s;
+            pointer-events: none;
+        }
+
+        .indicator-pill {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 30;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(20px);
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        .sparkle {
+            color: #fbbf24;
+            display: none;
+        }
+
+        /* Estilos quando ativo */
+        .is-active #img-before {
+            opacity: 0;
+        }
+
+        .is-active .status-badge {
+            background-color: #dc2626;
+            border-color: #f87171;
+            color: white;
+        }
+
+        .is-active .sparkle {
+            display: inline;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .instruction {
+            margin-top: 2rem;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 10px;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.3em;
+            text-align: center;
+            position: absolute;
+            bottom: 5vh;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container-img" id="main-container">
+        <!-- Badge -->
+        <div id="badge" class="status-badge bg-white/10 border-white/20 text-white/50">
+            ANTES
+        </div>
+
+        <!-- Imagem Depois -->
+        <img src="/qcE2d3g.png" alt="Depois" id="img-after">
         
-        {/* Indicador Flutuante Inferior */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-max px-6 py-3 bg-black/60 backdrop-blur-2xl border border-white/20 rounded-full flex items-center gap-3 shadow-2xl pointer-events-none">
-          {showAfter ? (
-            <>
-              <Sparkles size={18} className="text-yellow-400 animate-pulse" />
-              <span className="text-white text-xs font-black uppercase tracking-[0.2em]">Qualidade Pro Ativa</span>
-            </>
-          ) : (
-            <span className="text-white/80 text-xs font-bold uppercase tracking-[0.1em]">Segure para comparar</span>
-          )}
+        <!-- Imagem Antes -->
+        <img src="/622940303.jpg" alt="Antes" id="img-before">
+
+        <!-- Indicador -->
+        <div class="indicator-pill">
+            <span id="sparkle-icon" class="sparkle">✨</span>
+            <span id="label-text" class="text-white/80 text-xs font-bold uppercase tracking-wider">Segure para comparar</span>
         </div>
-
-        {/* Badge de Status no Canto */}
-        <div className="absolute top-6 left-6 pointer-events-none">
-           <span className={`px-4 py-1.5 rounded-full text-[10px] font-black transition-all border ${showAfter ? 'bg-red-600 border-red-400 text-white' : 'bg-white/10 border-white/20 text-white/50'}`}>
-             {showAfter ? 'DEPOIS' : 'ANTES'}
-           </span>
-        </div>
-      </div>
-
-      {/* Pequeno aviso de instrução fora do card */}
-      <p className="mt-8 text-white/30 text-[10px] uppercase font-bold tracking-[0.3em] text-center">
-        Toque e mantenha pressionado
-      </p>
-
     </div>
-  );
-};
 
-export default App;
+    <p class="instruction">Toque e mantenha pressionado</p>
+
+    <script>
+        const container = document.getElementById('main-container');
+        const badge = document.getElementById('badge');
+        const labelText = document.getElementById('label-text');
+        const sparkle = document.getElementById('sparkle-icon');
+
+        function activate() {
+            container.classList.add('is-active');
+            badge.innerText = 'DEPOIS';
+            labelText.innerText = 'Qualidade Pro Ativa';
+            labelText.classList.remove('text-white/80');
+            labelText.classList.add('text-white');
+            sparkle.style.display = 'inline';
+        }
+
+        function deactivate() {
+            container.classList.remove('is-active');
+            badge.innerText = 'ANTES';
+            labelText.innerText = 'Segure para comparar';
+            labelText.classList.add('text-white/80');
+            labelText.classList.remove('text-white');
+            sparkle.style.display = 'none';
+        }
+
+        // Eventos de Toque (Celular)
+        container.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            activate();
+        });
+        container.addEventListener('touchend', deactivate);
+
+        // Eventos de Mouse (Computador)
+        container.addEventListener('mousedown', activate);
+        container.addEventListener('mouseup', deactivate);
+        container.addEventListener('mouseleave', deactivate);
+    </script>
+</body>
+</html>
