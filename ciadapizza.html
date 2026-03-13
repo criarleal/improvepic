@@ -9,27 +9,41 @@
         body {
             background-color: black;
             margin: 0;
+            padding: 0;
             overflow: hidden;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            height: 100dvh; /* Usa dynamic viewport height para mobile */
             width: 100vw;
             font-family: system-ui, -apple-system, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
 
+        .main-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+
         .container-img {
             position: relative;
-            /* Ocupa 95% da largura ou altura disponível, o que for menor */
-            width: 92vw;
-            height: 85vh;
-            max-width: 800px;
-            border-radius: 2.5rem;
+            width: 100%;
+            /* Ajusta a altura proporcionalmente para não estourar a tela */
+            max-height: 75vh; 
+            aspect-ratio: 1 / 1; /* Mantém o formato da pizza */
+            border-radius: 2rem;
             overflow: hidden;
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            background-color: #050505;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: #080808;
+            transition: transform 0.2s ease;
         }
 
         img {
@@ -37,9 +51,8 @@
             inset: 0;
             width: 100%;
             height: 100%;
-            /* 'cover' faz a imagem preencher o container sem deixar bordas pretas internas */
-            object-fit: cover;
-            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            object-fit: contain; /* Garante que a pizza nunca seja cortada */
+            transition: opacity 0.2s ease-in-out;
         }
 
         #img-before {
@@ -48,102 +61,96 @@
 
         .status-badge {
             position: absolute;
-            top: 1.5rem;
-            left: 1.5rem;
+            top: 1rem;
+            left: 1rem;
             z-index: 30;
-            padding: 0.5rem 1.2rem;
+            padding: 0.4rem 0.8rem;
             border-radius: 9999px;
-            font-size: 11px;
-            font-weight: 900;
-            letter-spacing: 0.15em;
-            border-width: 1px;
-            transition: all 0.3s ease;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
             pointer-events: none;
-            backdrop-filter: blur(10px);
+            transition: all 0.2s ease;
         }
 
         .indicator-pill {
             position: absolute;
-            bottom: 2rem;
+            bottom: 1.5rem;
             left: 50%;
             transform: translateX(-50%);
             z-index: 30;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(20px);
-            padding: 1rem 2rem;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(15px);
+            padding: 0.8rem 1.5rem;
             border-radius: 9999px;
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            border: 1px solid rgba(255, 255, 255, 0.25);
+            gap: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
             white-space: nowrap;
             pointer-events: none;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
         }
 
-        .sparkle {
-            color: #fbbf24;
-            display: none;
-            font-size: 1.2rem;
-        }
-
-        /* Estados ativos */
+        /* Estilo para quando estiver pressionando */
         .is-active #img-before {
             opacity: 0;
         }
 
         .is-active .status-badge {
-            background-color: #dc2626;
-            border-color: #f87171;
+            background-color: #e11d48;
+            border-color: #fb7185;
             color: white;
-            transform: scale(1.1);
-        }
-
-        .is-active .sparkle {
-            display: inline;
-            animation: pulse 1s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(1.2); }
         }
 
         .instruction {
-            color: rgba(255, 255, 255, 0.25);
-            font-size: 11px;
+            margin-top: 1.5rem;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 10px;
             text-transform: uppercase;
-            font-weight: 800;
-            letter-spacing: 0.4em;
+            font-weight: 700;
+            letter-spacing: 0.3em;
             text-align: center;
-            position: absolute;
-            bottom: 3vh;
-            width: 100%;
+        }
+
+        /* Ajustes específicos para telas muito pequenas */
+        @media (max-height: 600px) {
+            .container-img {
+                max-height: 60vh;
+            }
+            .indicator-pill {
+                padding: 0.6rem 1rem;
+                bottom: 1rem;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="container-img" id="main-container">
-        <!-- Badge -->
-        <div id="badge" class="status-badge bg-white/10 border-white/20 text-white/70">
-            ANTES
+    <div class="main-wrapper">
+        <div class="container-img" id="main-container">
+            <!-- Badge de Status -->
+            <div id="badge" class="status-badge bg-black/40 text-white/60">
+                ANTES
+            </div>
+
+            <!-- Foto Masterizada -->
+            <img src="https://criarleal.github.io/improvepic/qcE2d3g.png" alt="Depois" id="img-after">
+            
+            <!-- Foto Original -->
+            <img src="https://criarleal.github.io/improvepic/622940303.jpg" alt="Antes" id="img-before">
+
+            <!-- Botão de Instrução -->
+            <div class="indicator-pill">
+                <span id="sparkle-icon" style="display:none">✨</span>
+                <span id="label-text" class="text-white text-xs font-bold uppercase tracking-widest">Segure para comparar</span>
+            </div>
         </div>
 
-        <!-- Imagem Depois (Masterizada) -->
-        <img src="https://criarleal.github.io/improvepic/qcE2d3g.png" alt="Depois" id="img-after">
-        
-        <!-- Imagem Antes (Original) -->
-        <img src="https://criarleal.github.io/improvepic/622940303.jpg" alt="Antes" id="img-before">
-
-        <!-- Indicador centralizado -->
-        <div class="indicator-pill">
-            <span id="sparkle-icon" class="sparkle">✨</span>
-            <span id="label-text" class="text-white/90 text-sm font-bold uppercase tracking-widest">Segure para comparar</span>
-        </div>
+        <p class="instruction">Pressione para ver a mágica</p>
     </div>
-
-    <p class="instruction">Toque e mantenha pressionado</p>
 
     <script>
         const container = document.getElementById('main-container');
@@ -152,10 +159,12 @@
         const sparkle = document.getElementById('sparkle-icon');
 
         function activate(e) {
-            if (e) e.preventDefault();
+            // Previne zoom indesejado ou scroll ao segurar no mobile
+            if (e && e.cancelable) e.preventDefault();
+            
             container.classList.add('is-active');
             badge.innerText = 'DEPOIS';
-            labelText.innerText = 'Qualidade Pro Ativa';
+            labelText.innerText = 'Qualidade Ultra HD';
             sparkle.style.display = 'inline';
         }
 
@@ -166,15 +175,18 @@
             sparkle.style.display = 'none';
         }
 
-        // Eventos Mobile
+        // Suporte Total para Mobile (Touch)
         container.addEventListener('touchstart', activate, {passive: false});
         container.addEventListener('touchend', deactivate);
         container.addEventListener('touchcancel', deactivate);
 
-        // Eventos Desktop
+        // Suporte para Desktop (Mouse)
         container.addEventListener('mousedown', activate);
         container.addEventListener('mouseup', deactivate);
         container.addEventListener('mouseleave', deactivate);
+
+        // Bloqueia o menu de contexto (clique direito) na imagem para não atrapalhar o "segurar"
+        container.addEventListener('contextmenu', (e) => e.preventDefault());
     </script>
 </body>
 </html>
