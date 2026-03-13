@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Comparador de Qualidade</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: black;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100dvh;
+            width: 100vw;
+            font-family: system-ui, -apple-system, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .main-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            padding: 1rem;
+            box-sizing: border-box;
+            gap: 2rem;
+        }
+
+        .container-img {
+            position: relative;
+            width: 100%;
+            max-width: 550px; 
+            aspect-ratio: 1 / 1; 
+            border-radius: 2.5rem;
+            overflow: hidden;
+            box-shadow: 0 0 60px rgba(0, 0, 0, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: #080808;
+        }
+
+        img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+
+        #img-before {
+            z-index: 10;
+        }
+
+        .status-badge {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            z-index: 30;
+            padding: 0.5rem 1.2rem;
+            border-radius: 9999px;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.2em;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(12px);
+            pointer-events: none;
+            transition: all 0.3s ease;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* BOTÃO INTERATIVO (ÁREA DE CLIQUE) */
+        .interactive-pill {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            backdrop-filter: blur(20px);
+            padding: 1.25rem 3rem;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            min-width: 280px;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            user-select: none;
+            touch-action: none;
+        }
+
+        .interactive-pill:hover {
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .sparkle {
+            display: none;
+            color: #fbbf24;
+            font-size: 1.2rem;
+        }
+
+        /* Estados ativos (Pressionado) */
+        body.is-active #img-before {
+            opacity: 0;
+        }
+
+        body.is-active .status-badge {
+            background-color: #e11d48;
+            border-color: #fb7185;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        body.is-active .interactive-pill {
+            background: rgba(225, 29, 72, 0.2);
+            border-color: #e11d48;
+            transform: scale(0.96) translateY(0);
+            box-shadow: 0 4px 15px rgba(225, 29, 72, 0.3);
+        }
+
+        body.is-active .sparkle {
+            display: inline;
+            animation: pulse 0.8s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from { transform: scale(1); opacity: 1; }
+            to { transform: scale(1.3); opacity: 0.8; }
+        }
+
+        .instruction-footer {
+            color: rgba(255, 255, 255, 0.25);
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.4em;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-wrapper">
+        <div class="container-img">
+            <!-- Etiqueta de Status -->
+            <div id="badge" class="status-badge bg-black/40">
+                ANTES
+            </div>
+
+            <!-- Imagem Depois -->
+            <img src="https://criarleal.github.io/improvepic/qcE2d3g.png" alt="Depois" id="img-after">
+            
+            <!-- Imagem Antes -->
+            <img src="https://criarleal.github.io/improvepic/622940303.jpg" alt="Antes" id="img-before">
+        </div>
+
+        <!-- BOTÃO QUE CONTROLA TUDO -->
+        <div class="interactive-pill" id="action-btn">
+            <span id="sparkle-icon" class="sparkle">✨</span>
+            <span id="label-text" class="text-white text-xs font-black uppercase tracking-[0.25em]">Segure para comparar</span>
+        </div>
+
+        <p class="instruction-footer">Toque no botão acima</p>
+    </div>
+
+    <script>
+        const btn = document.getElementById('action-btn');
+        const badge = document.getElementById('badge');
+        const labelText = document.getElementById('label-text');
+        const sparkle = document.getElementById('sparkle-icon');
+        const body = document.body;
+
+        function activate(e) {
+            if (e && e.cancelable) e.preventDefault();
+            body.classList.add('is-active');
+            badge.innerText = 'DEPOIS';
+            labelText.innerText = 'Qualidade Pro Ativa';
+            sparkle.style.display = 'inline';
+        }
+
+        function deactivate() {
+            body.classList.remove('is-active');
+            badge.innerText = 'ANTES';
+            labelText.innerText = 'Segure para comparar';
+            sparkle.style.display = 'none';
+        }
+
+        // Eventos no Botão (Mobile)
+        btn.addEventListener('touchstart', activate, {passive: false});
+        btn.addEventListener('touchend', deactivate);
+        btn.addEventListener('touchcancel', deactivate);
+
+        // Eventos no Botão (Desktop)
+        btn.addEventListener('mousedown', activate);
+        window.addEventListener('mouseup', deactivate); // Window para garantir que solte mesmo fora do botão
+
+        // Bloqueia menu de contexto no botão
+        btn.addEventListener('contextmenu', (e) => e.preventDefault());
+    </script>
+</body>
+</html>
